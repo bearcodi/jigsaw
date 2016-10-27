@@ -83,7 +83,17 @@ class Jigsaw
 
     private function handle($file, $config)
     {
-        return $this->getHandler($file)->handle($file, $config);
+        return $this->setConfigCurrentPage($file, $config)
+             ->getHandler($file)
+             ->handle($file, $config);
+    }
+
+    private function setConfigCurrentPage($file, &$config)
+    {
+        $fileBaseName = $file->getBasename('.blade.php');
+        $fileName = $fileBaseName === 'index' ? '' : $fileBaseName;
+        $config['currentPath'] = '/' . $file->getRelativePath() . $fileName;
+        return $this;
     }
 
     private function getDirectory($file)
